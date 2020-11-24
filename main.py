@@ -1,13 +1,11 @@
 ##################################################
 ##   Project_Name: SHU Daily Report Script      ##
-##   Latest_Version: 0.1                        ##
-##   Date: 2020/10/29                           ##
+##   Latest_Version: 0.2                        ##
+##   Date: 2020/11/24                           ##
 ##   Based on Python, Selenium                  ##
 ##   Originated by LuminolT (2020 SHU.CES-CSE)  ##
 ##   Contact me!    QQ: 1477357096              ##
 ##################################################
-
-## Issues: Can only be used at night (for the sake of searching method)
 
 import pytest
 import time
@@ -31,39 +29,61 @@ class TestDailyReport():
     quit()
   
   def login(self):
-    self.driver.get("https://selfreport.shu.edu.cn/XueSFX/HalfdayReport_History.aspx")
+    TodayDate = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+    TodayHour = int(time.strftime('%H', time.localtime(time.time())))
+    if TodayHour < 20:
+      self.driver.get("https://selfreport.shu.edu.cn/XueSFX/HalfdayReport.aspx?day={}&t=1".format(TodayDate))
+    else:
+      self.driver.get("https://selfreport.shu.edu.cn/XueSFX/HalfdayReport.aspx?day={}&t=2".format(TodayDate))
     self.driver.find_element(By.ID, "username").click()
     ## ID and Password
-    self.driver.find_element(By.ID, "username").send_keys("20120000")
+    self.driver.find_element(By.ID, "username").send_keys("")
     self.driver.find_element(By.ID, "password").click()
-    self.driver.find_element(By.ID, "password").send_keys("123456")
+    self.driver.find_element(By.ID, "password").send_keys("")
     self.driver.find_element(By.ID, "submit").click()
   
   def test_dailyReport(self):
-    n = 0.5
-    #timeset, depends on your Internet Situation
-    while True:
-      self.driver.find_element(By.PARTIAL_LINK_TEXT, "未填报").click()
-      time.sleep(n)
-      self.driver.find_element(By.CSS_SELECTOR, "#p1_ChengNuo .f-field-body-checkboxlabel").click()
-      time.sleep(n)
-      self.driver.find_element(By.ID, "p1_TiWen-inputEl").click()
-      time.sleep(n)
-      temperature = random.randint(1, 6)/10
-      t = str(36+temperature)
-      self.driver.find_element(By.ID, "p1_TiWen-inputEl").send_keys(t)
-      time.sleep(n)
-      self.driver.find_element(By.CSS_SELECTOR, "#fineui_7 .f-field-body-checkboxlabel").click()
-      time.sleep(n) 
-      self.driver.find_element(By.ID, "p1_ctl00_btnSubmit").click()
-      time.sleep(n)
-      self.driver.find_element(By.ID, "fineui_14").click()
-      time.sleep(1)    
-      self.driver.find_element(By.ID, "fineui_19").click()
-      time.sleep(n)
-      self.driver.find_element(By.ID, "lbReportHistory").click()
+    # self.driver.find_element(By.PARTIAL_LINK_TEXT, "未填报").click()
+    # time.sleep(n)
+    # self.driver.find_element(By.CSS_SELECTOR, "#p1_ChengNuo .f-field-body-checkboxlabel").click()
+    # time.sleep(n)
+    # self.driver.find_element(By.ID, "p1_TiWen-inputEl").click()
+    # time.sleep(n)
+    # temperature = random.randint(1, 6)/10
+    # t = str(36+temperature)
+    # self.driver.find_element(By.ID, "p1_TiWen-inputEl").send_keys(t)
+    # time.sleep(n)
+    # self.driver.find_element(By.CSS_SELECTOR, "#fineui_7 .f-field-body-checkboxlabel").click()
+    # time.sleep(n) 
+    # self.driver.find_element(By.ID, "p1_ctl00_btnSubmit").click()
+    # time.sleep(n)
+    # self.driver.find_element(By.ID, "fineui_14").click()
+    # time.sleep(1)    
+    # self.driver.find_element(By.ID, "fineui_19").click()
+    # time.sleep(n)
+    # self.driver.find_element(By.ID, "lbReportHistory").click()
+    self.driver.find_element(By.ID, "p1_ChengNuo-inputEl-icon").click()
+    self.driver.find_element(By.ID, "fineui_6-inputEl-icon").click()
+    self.driver.find_element(By.ID, "fineui_11-inputEl-icon").click()
+    self.driver.find_element(By.ID, "fineui_13-inputEl-icon").click()
+    self.driver.find_element(By.ID, "p1_TiWen-inputEl").click()
+    time.sleep(0.1)
+    temperature = random.randint(1, 6)/10
+    t = str(36+temperature)
+    self.driver.find_element(By.ID, "p1_TiWen-inputEl").send_keys(t)
+    time.sleep(0.1)
+    self.driver.find_element(By.ID, "fineui_21-inputEl-icon").click()
+    self.driver.find_element(By.ID, "fineui_23-inputEl-icon").click()
+    # self.driver.find_element(By.ID, "p1_ctl00_btnSubmit").click()
+    # time.sleep(1)
+    self.driver.find_element(By.CSS_SELECTOR, "#fineui_32 .f-btn-text").click()
+    time.sleep(1)
+    self.driver.find_element(By.CSS_SELECTOR, "#fineui_37 .f-btn-text").click()
+    time.sleep(1)
 
 def main():
+
+  
   TD=TestDailyReport()
   TD.setup_method()
   TD.login()
